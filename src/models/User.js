@@ -1,4 +1,4 @@
-const knex = require('../database/connection')
+const knex = require('../../config/database')
 
 class User {
 

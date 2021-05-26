@@ -42,8 +42,8 @@ class UserController {
             if (emailExists) return res.status(400).json({ msg: 'este email já está cadastrado' })
 
             senha = bcrypt.hashSync(senha, bcrypt.genSaltSync(12))
-            await User.add(nome, email, senha)
-            return res.status(200).json({ msg: 'novo usuário criado' })
+            const created = await User.add(nome, email, senha)
+            return res.status(200).json({ msg: 'novo usuário criado', created })
         } catch (err) {
             console.log(err)
             return res.status(500).json({ msg: err })
@@ -82,8 +82,9 @@ class UserController {
 
             if (Object.values(editData).length === 0) return res.status(200).json({ msg: 'nenhuma alteração realizada' })
 
+            editData.updatedAt = new Date()
             const editedUser = await User.update(id, editData)
-            return res.status(200).json({ msg: 'usuário editado', editedUser })
+            return res.status(200).json({ msg: 'usuário editado', editedUser, editData })
         } catch (err) {
             console.log(err)
             return res.status(500).json({ msg: err })

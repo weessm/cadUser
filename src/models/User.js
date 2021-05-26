@@ -4,7 +4,7 @@ class User {
 
     async findAll() {
         try {
-            const result = await knex('user').select('id', 'nome', 'email', 'role')
+            const result = await knex('user').select('id', 'nome', 'email', 'role', 'createdAt', 'updatedAt')
             return result
         } catch (err) {
             console.log(err)
@@ -14,7 +14,7 @@ class User {
 
     async findById(id) {
         try {
-            const result = await knex('user').select('id', 'nome', 'email', 'role').where({ id }).first()
+            const result = await knex('user').select('id', 'nome', 'email', 'role', 'createdAt', 'updatedAt').where({ id }).first()
             return result
         } catch (err) {
             console.log(err)
@@ -24,7 +24,7 @@ class User {
 
     async findByEmail(email) {
         try {
-            const result = await knex('user').select('id', 'nome', 'email', 'role').where({ email }).first()
+            const result = await knex('user').select('id', 'nome', 'email', 'role', 'createdAt', 'updatedAt').where({ email }).first()
             return result
         } catch (err) {
             console.log(err)
@@ -44,7 +44,10 @@ class User {
 
     async add(nome, email, senha) {
         try {
-            await knex('user').insert({ nome, email, senha, role: 0 })
+            let role = 0
+            let createdAt = new Date()
+            await knex('user').insert({ nome, email, senha, role, createdAt })
+            return {nome, email, role, createdAt}
         } catch (err) {
             console.log(err)
         }
@@ -73,7 +76,8 @@ class User {
     async del(id) {
         try {
             const result = await knex('user').delete().where({ id })
-            return result
+            let deletedAt = new Date()
+            return {result, id, deletedAt}
         } catch (err) {
             console.log(err)
         }
@@ -90,8 +94,9 @@ class User {
 
     async updatePassword(senha, token) {
         try {
-            const updated = await knex('user').update({ senha: senha, usedToken: 1 }).where({ token })
-            return updated
+            let updatedAt = new Date()
+            const updated = await knex('user').update({ senha: senha, usedToken: 1, updatedAt }).where({ token })
+            return {updated, updatedAt}
         } catch (err) {
             console.log(err)
         }

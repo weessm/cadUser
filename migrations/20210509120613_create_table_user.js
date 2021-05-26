@@ -8,6 +8,8 @@ exports.up = function (knex) {
         t.datetime('expiresToken').nullable()
         t.integer('usedToken').notNullable().defaultTo(1)
         t.integer('role').notNullable().defaultTo(0)
+        t.datetime('createdAt').notNullable()
+        t.datetime('updatedAt').nullable()
     })
 }
 

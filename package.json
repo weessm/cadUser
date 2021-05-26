@@ -7,7 +7,10 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": ["api", "user"],
+  "keywords": [
+    "api",
+    "user"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -18,5 +21,8 @@
     "knex": "^0.95.4",
     "mysql2": "^2.2.5",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

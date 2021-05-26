@@ -18,6 +18,7 @@ class PasswordController {
             editData.expiresToken = new Date()
             editData.expiresToken.setHours(editData.expiresToken.getHours() + 1)
             editData.usedToken = 0
+            editData.updatedAt = new Date()
 
             const createdToken = await User.createPasswordToken(email, editData)
             return res.status(200).json({ msg: 'novo token criado válido por 1 (uma) hora', createdToken })
@@ -37,7 +38,8 @@ class PasswordController {
             const user = await User.findByToken(token)
             if (existsOrError(user)) return res.status(400).json({ msg: 'usuário não encontrado' })
 
-            if (user.usedToken || user.expiresToken < new Date()) return res.status(400).json({ msg: 'seu token expirou' })
+            if(user.usedToken) return res.status(400).json({msg: 'este token já foi utilizado, para redefinir sua senha novamente refaça o processo de recuperação'})
+            if (user.expiresToken < new Date()) return res.status(400).json({ msg: 'seu token expirou' })
 
             if (existsOrError(senha) || senha.length < 4) return res.status(400).json({ msg: 'senha deve ter 4 ou mais caracteres' })
             if (existsOrError(confirmaSenha) || confirmaSenha.length < 4) return res.status(400).json({ msg: 'confirmação de senha deve ter 4 ou mais caracteres' })

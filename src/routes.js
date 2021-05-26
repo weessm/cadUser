@@ -12,7 +12,7 @@ router.get('/user/:id', UserController.findUserById)
 router.put('/user/:id', UserController.editUser)
 router.delete('/user/:id', UserController.deleteUser)
 
-router.post('/reset-password', PasswordController.forgotPassword)
-router.put('/reset-password/:token', PasswordController.changePassword)
+router.post('/forgot-password', PasswordController.forgotPassword)
+router.put('/forgot-password/:token', PasswordController.changePassword)
 
 module.exports = router

@@ -24,7 +24,7 @@ class User {
 
     async findByEmail(email) {
         try {
-            const result = await knex('user').select('id', 'nome', 'email', 'role', 'createdAt', 'updatedAt').where({ email }).first()
+            const result = await knex('user').select('id', 'nome', 'senha', 'email', 'role', 'createdAt', 'updatedAt').where({ email }).first()
             return result
         } catch (err) {
             console.log(err)

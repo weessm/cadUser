@@ -1,4 +1,7 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+const secret = process.env.SECRET
 const User = require("../models/User")
 const { existsOrError, validateEmail, validateID } = require("./ValidatorController")
 
@@ -101,6 +104,30 @@ class UserController {
 
             const deletedUser = await User.del(id)
             return res.status(200).json({ msg: 'usuário deletado', deletedUser })
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({ msg: err })
+        }
+    }
+
+    async singIn(req, res){
+        let {email, senha} = req.body
+        
+        if (validateEmail(email) == false) return res.status(400).json({ msg: 'digite um email válido' })
+        if (existsOrError(senha) || senha.length < 4) return res.status(400).json({ msg: 'senha deve ter 4 ou mais caracteres' })
+
+        try {
+            const user = await User.findByEmail(email)
+            if (existsOrError(user)) return res.status(400).json({ msg: 'email ou senha incorretos' })
+
+            const comparePass = await bcrypt.compare(senha, user.senha)
+
+            if(comparePass){
+                const token = jwt.sign({email: user.email, role: user.role}, secret)
+                return res.status(200).json({token: token})
+            }else{
+                return res.status(406).json({msg: "senha incorreta"})
+            }
         } catch (err) {
             console.log(err)
             return res.status(500).json({ msg: err })
